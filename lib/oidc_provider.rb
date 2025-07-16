@@ -10,6 +10,8 @@ module OIDCProvider
     Profile = "profile"
     Email = "email"
     Address = "address"
+    Phone = "phone"
+    OfflineAccess = "offline_access"
   end
 
   autoload :TokenEndpoint, 'oidc_provider/token_endpoint'

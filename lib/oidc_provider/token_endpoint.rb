@@ -15,14 +15,20 @@ module OIDCProvider
         client = find_valid_client_from(req) || req.invalid_client!
 
         Rails.logger.info 'Found a client!'
-
         case req.grant_type
         when :authorization_code
           Rails.logger.info 'Grant type was an authorization code. Correct!'
           authorization = Authorization.valid.where(client_id: client.identifier, code: req.code).first || req.invalid_grant!
           Rails.logger.info 'We found an authorization matching this code!'
-          res.access_token = authorization.access_token.to_bearer_token
+          with_refresh_token = authorization.scopes.include?('offline_access')
+          res.access_token = authorization.access_token.to_bearer_token(with_refresh_token)
           res.id_token = authorization.id_token.to_jwt if authorization.scopes.include?('openid')
+        when :refresh_token
+          Rails.logger.info 'Grant type was an refresh_token code. Correct!'
+          refresh_token = RefreshToken.valid.where(client_id: client.identifier, token: req.refresh_token).first || req.invalid_grant!
+          authorization = build_authorization_with(refresh_token..scopes)
+          res.access_token = authorization.access_token.to_bearer_token
+          res.refresh_token = refresh_token.token
         else
           Rails.logger.info "Unsupported grant type: #{req.grant_type.inspect}"
           req.unsupported_grant_type!
@@ -42,5 +48,6 @@ module OIDCProvider
 
       client.redirect_uri.include?(req.redirect_uri) ? client : nil
     end
+
   end
 end
