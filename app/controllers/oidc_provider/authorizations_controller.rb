@@ -49,7 +49,6 @@ module OIDCProvider
     def require_response_type_code
       type =  oauth_request.response_type
       type.nil? && oauth_request.unsupported_response_type!
-      Rails.logger.info "type: #{type.include?(:code) && type.include?(:id_token)}"
       case type
       when :code
         @requested_type=:code
