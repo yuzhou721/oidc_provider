@@ -15,7 +15,8 @@ module OIDCProvider
 
       authorization = build_authorization_with(requested_scopes)
 
-      oauth_response.code = authorization.code
+      oauth_response.code = authorization.code if @requested_type==:code or  @requested_type == :hybrid
+      oauth_response.id_token = authorization.id_token.to_jwt if @requested_type==:id_token or  @requested_type == :hybrid
       oauth_response.redirect_uri = @redirect_uri
       oauth_response.approve!
       redirect_to oauth_response.location, allow_other_host: true
@@ -46,9 +47,23 @@ module OIDCProvider
     helper_method :requested_scopes
 
     def require_response_type_code
-      return if oauth_request.response_type == :code
+      type =  oauth_request.response_type
+      type.nil? && oauth_request.unsupported_response_type!
+      Rails.logger.info "type: #{type.include?(:code) && type.include?(:id_token)}"
+      case type
+      when :code
+        @requested_type=:code
+      when :id_token
+        @requested_type=:id_token
+      when ->(ary) do ary.include?(:code) && ary.include?(:id_token) end
+        @requested_type=:hybrid
+        # when type.include?("token")
+        #   @response_type=:token
+      else
+        oauth_request.unsupported_response_type!
+      end
 
-      oauth_request.unsupported_response_type!
+
     end
 
     def reset_login_if_necessary

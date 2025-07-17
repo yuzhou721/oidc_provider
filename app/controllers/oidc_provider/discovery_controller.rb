@@ -34,7 +34,7 @@ module OIDCProvider
         end_session_endpoint: end_session_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
         jwks_uri: jwks_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
         scopes_supported: ["openid"] + OIDCProvider.supported_scopes.map(&:name),
-        response_types_supported: [:code],
+        response_types_supported: [:code, :id_token],
         grant_types_supported: [:authorization_code, :refresh_token],
         subject_types_supported: [:public],
         id_token_signing_alg_values_supported: [:RS256],
