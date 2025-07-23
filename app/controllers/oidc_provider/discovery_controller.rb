@@ -25,14 +25,13 @@ module OIDCProvider
     end
 
     def openid_configuration
-      is_https= OIDCProvider.issuer.start_with?('https')
       config = OpenIDConnect::Discovery::Provider::Config::Response.new(
         issuer: OIDCProvider.issuer,
-        authorization_endpoint: authorizations_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
-        token_endpoint: tokens_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
-        userinfo_endpoint: user_info_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
-        end_session_endpoint: end_session_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
-        jwks_uri: jwks_url(host: OIDCProvider.issuer, protocol: is_https ? :https : :http),
+        authorization_endpoint: authorizations_url(host: OIDCProvider.issuer),
+        token_endpoint: tokens_url(host: OIDCProvider.issuer),
+        userinfo_endpoint: user_info_url(host: OIDCProvider.issuer),
+        end_session_endpoint: end_session_url(host: OIDCProvider.issuer),
+        jwks_uri: jwks_url(host: OIDCProvider.issuer),
         scopes_supported: ["openid"] + OIDCProvider.supported_scopes.map(&:name),
         response_types_supported: [:code, :id_token],
         grant_types_supported: [:authorization_code, :refresh_token],
