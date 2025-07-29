@@ -50,7 +50,7 @@ module OIDCProvider
       end
 
       def public_jwk
-        JSON::JWK.new key_pair.public_key
+        JSON::JWK.new key_pair.public_key, {use: 'sig',alg: 'RS256'}
       end
     end
   end
