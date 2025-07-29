@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ConnectOp</title>
+  <%= csrf_meta_tags %>
+  <%= action_cable_meta_tag %>
+
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+
+<body>
+<%= yield %>
+</body>
+</html>

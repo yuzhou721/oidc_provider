@@ -1,5 +1,6 @@
 OIDCProvider::Engine.routes.draw do
-  match 'authorizations' => 'authorizations#create', via: [:get, :post]
+  resources :authorizations, only: [:new, :create]
+
   resource :user_info, only: :show
   get 'sessions/logout', to: 'sessions#destroy', as: :end_session
 

@@ -10,20 +10,23 @@ module OIDCProvider
     before_action :reset_login_if_necessary
     before_action :require_authentication
 
+    def new
+    end
+
     def create
+      if params[:commit] == 'approve'
+        Rails.logger.info "scopes: #{requested_scopes}"
 
-      Rails.logger.info "scopes: #{requested_scopes}"
+        authorization = build_authorization_with(requested_scopes)
 
-      authorization = build_authorization_with(requested_scopes)
-
-      oauth_response.code = authorization.code if @requested_type==:code or  @requested_type == :hybrid
-      oauth_response.id_token = authorization.id_token.to_jwt if @requested_type==:id_token or  @requested_type == :hybrid
-      oauth_response.redirect_uri = @redirect_uri
-      oauth_response.approve!
-      redirect_to oauth_response.location,status: 303, allow_other_host: true
-
-      # If we ever need to support denied authorizations that is done by:
-      # oauth_request.access_denied!
+        oauth_response.code = authorization.code if @requested_type==:code or  @requested_type == :hybrid
+        oauth_response.id_token = authorization.id_token.to_jwt if @requested_type==:id_token or  @requested_type == :hybrid
+        oauth_response.redirect_uri = @redirect_uri
+        oauth_response.approve!
+        redirect_to oauth_response.location,allow_other_host: true
+      else
+        oauth_request.access_denied!
+      end
     end
 
     private
