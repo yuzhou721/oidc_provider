@@ -4,6 +4,8 @@ module OIDCProvider
   class AuthorizationsController < ApplicationController
     include Concerns::ConnectEndpoint
 
+    skip_before_action :verify_authenticity_token
+
     before_action :require_oauth_request
     before_action :require_response_type_code
     before_action :require_client

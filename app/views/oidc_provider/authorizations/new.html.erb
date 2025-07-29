@@ -3,7 +3,7 @@
   <%= form_tag authorizations_path do %>
     <ul>
       <% requested_scopes.each do |scope| %>
-        <li><%= scope.name %></li>
+        <li><%= scope %></li>
       <% end %>
     </ul>
     <% [:client_id, :response_type, :redirect_uri, :scope, :state, :nonce].each do |key| %>

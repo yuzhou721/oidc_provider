@@ -27,7 +27,7 @@ module OIDCProvider
     def openid_configuration
       config = OpenIDConnect::Discovery::Provider::Config::Response.new(
         issuer: OIDCProvider.issuer,
-        authorization_endpoint: new_authorizations_url(host: OIDCProvider.issuer),
+        authorization_endpoint: new_authorization_url(host: OIDCProvider.issuer),
         token_endpoint: tokens_url(host: OIDCProvider.issuer),
         userinfo_endpoint: user_info_url(host: OIDCProvider.issuer),
         end_session_endpoint: end_session_url(host: OIDCProvider.issuer),
