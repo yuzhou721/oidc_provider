@@ -44,6 +44,10 @@ module OIDCProvider
   mattr_accessor :account_identifier
   @@account_identifier = :id
 
+  mattr_accessor :account_email
+  @@account_identifier = :email
+
+
   mattr_accessor :after_sign_out_path
 
   def self.add_client(&block)

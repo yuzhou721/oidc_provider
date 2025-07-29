@@ -22,8 +22,8 @@ module OIDCProvider
         auth_time:created_at.to_i,
         amr: ['pwd']
       )
-      res.email = account.email if scopes.include?(Scopes::Email)
-      res.email_verified = true if scopes.include?(Scopes::Email)
+      res.email = account.send(OIDCProvider.account_email) if scopes.include?(Scopes::Email)
+      res.email_verified = true if scopes.include?(Scopes::Email) and res.email
       res.family_name = account.family_name if scopes.include?(Scopes::Profile)
       res.given_name = account.given_name if scopes.include?(Scopes::Profile)
       res
