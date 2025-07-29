@@ -38,7 +38,7 @@ module OIDCProvider
         subject_types_supported: [:public],
         id_token_signing_alg_values_supported: [:RS256],
         token_endpoint_auth_methods_supported: ['client_secret_basic', 'client_secret_post'],
-        claims_supported: ['sub', 'iss', 'name', 'email','aud','email_ verified','family_name','given_name']
+        claims_supported: ['sub', 'iss', 'name', 'email','aud','email_verified','family_name','given_name']
       )
       render json: config
     end
