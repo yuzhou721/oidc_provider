@@ -11,7 +11,7 @@ module OIDCProvider
     delegate :account, to: :authorization
 
     def to_response_object
-      scopes = account.scopes
+      scopes = authorization.scopes
       res = OpenIDConnect::ResponseObject::IdToken.new(
         iss: OIDCProvider.issuer,
         sub: account.send(OIDCProvider.account_identifier),
