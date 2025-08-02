@@ -23,7 +23,6 @@ module OIDCProvider
           with_refresh_token = authorization.scopes.include?('offline_access')
           res.access_token = authorization.access_token.to_bearer_token(with_refresh_token)
           res.id_token = authorization.id_token.to_jwt if authorization.scopes.include?('openid')
-          res.scope = authorization.scopes
         when :refresh_token
           Rails.logger.info 'Grant type was an refresh_token code. Correct!'
           refresh_token = RefreshToken.valid.where(client_id: client.identifier, token: req.refresh_token).first || req.invalid_grant!
