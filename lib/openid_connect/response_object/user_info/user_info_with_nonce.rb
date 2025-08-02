@@ -2,7 +2,7 @@
 
 module OpenIDConnect
   class ResponseObject
-    class UserInfoExtension < UserInfo
+    class UserInfoWithNonce < UserInfo
       attr_accessor :nonce
 
       def initialize(attributes = {})
