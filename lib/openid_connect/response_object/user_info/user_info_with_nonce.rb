@@ -3,12 +3,8 @@
 module OpenIDConnect
   class ResponseObject
     class UserInfoWithNonce < UserInfo
-      attr_accessor :nonce
+      attr_required :nonce
 
-      def initialize(attributes = {})
-        super(attributes)
-        @nonce = attributes[:nonce] if attributes.key?(:nonce)
-      end
     end
   end
 end
