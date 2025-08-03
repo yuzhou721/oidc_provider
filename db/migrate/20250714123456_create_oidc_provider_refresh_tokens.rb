@@ -4,6 +4,7 @@ class CreateOIDCProviderRefreshTokens < ActiveRecord::Migration[5.1]
   def change
     create_table :oidc_provider_refresh_tokens do |t|
       t.string :client_id, null: false
+      t.belongs_to :authorization, null: false
 
       t.string :token, null: false
       t.datetime :expires_at, null: false

@@ -20,6 +20,11 @@ module OIDCProvider
       super || expire! && generate_access_token!
     end
 
+    def refresh!
+      access_token = create_access_token!
+      access_token.save!
+    end
+
     def id_token
       super || generate_id_token!
     end

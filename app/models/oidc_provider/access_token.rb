@@ -34,7 +34,8 @@ module OIDCProvider
     def generate_refresh_token(client_id,scopes)
       RefreshToken.create!(
         client_id: client_id,
-        scopes: scopes
+        scopes: scopes,
+        authorization: authorization
       )
     end
 
