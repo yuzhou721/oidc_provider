@@ -26,7 +26,7 @@ module OIDCProvider
         when :refresh_token
           Rails.logger.info 'Grant type was an refresh_token code. Correct!'
           refresh_token = RefreshToken.valid.where(token: req.refresh_token).first || req.invalid_grant!
-          authorization = build_authorization_with(refresh_token..scopes)
+          authorization = build_authorization_with(refresh_token.scopes)
           res.access_token = authorization.access_token.to_bearer_token(true)
         else
           Rails.logger.info "Unsupported grant type: #{req.grant_type.inspect}"
