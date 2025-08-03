@@ -12,7 +12,7 @@ module OIDCProvider
         Rack::OAuth2::AccessToken::Bearer.new(
           access_token: token,
           expires_in: (expires_at - Time.now).to_i,
-          refresh_token:  (get_refresh_token(authorization.client_id,authorization.scopes.to_s)||generate_refresh_token(authorization.client_id,authorization.scopes.to_s)).token,
+          refresh_token:  (get_refresh_token(authorization.client_id,authorization.scopes)||generate_refresh_token(authorization.client_id,authorization.scopes)).token,
           scope: authorization.scopes
         )
       else

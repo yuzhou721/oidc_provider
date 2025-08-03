@@ -8,15 +8,15 @@ module OIDCProvider
 
     def initialize
       @app = Rack::OAuth2::Server::Token.new do |req, res|
-        Rails.logger.info "Client ID: #{req.client_id}"
-        Rails.logger.info "Client secret: #{req.client_secret}"
-        Rails.logger.info "Redirect URI: #{req.redirect_uri}"
-
-        client = find_valid_client_from(req) || req.invalid_client!
-
-        Rails.logger.info 'Found a client!'
         case req.grant_type
         when :authorization_code
+          Rails.logger.info "Client ID: #{req.client_id}"
+          Rails.logger.info "Client secret: #{req.client_secret}"
+          Rails.logger.info "Redirect URI: #{req.redirect_uri}"
+
+          client = find_valid_client_from(req) || req.invalid_client!
+
+          Rails.logger.info 'Found a client!'
           Rails.logger.info 'Grant type was an authorization code. Correct!'
           authorization = Authorization.valid.where(client_id: client.identifier, code: req.code).first || req.invalid_grant!
           Rails.logger.info 'We found an authorization matching this code!'
@@ -25,10 +25,9 @@ module OIDCProvider
           res.id_token = authorization.id_token.to_jwt if authorization.scopes.include?('openid')
         when :refresh_token
           Rails.logger.info 'Grant type was an refresh_token code. Correct!'
-          refresh_token = RefreshToken.valid.where(client_id: client.identifier, token: req.refresh_token).first || req.invalid_grant!
+          refresh_token = RefreshToken.valid.where(token: req.refresh_token).first || req.invalid_grant!
           authorization = build_authorization_with(refresh_token..scopes)
-          res.access_token = authorization.access_token.to_bearer_token
-          res.refresh_token = refresh_token.token
+          res.access_token = authorization.access_token.to_bearer_token(true)
         else
           Rails.logger.info "Unsupported grant type: #{req.grant_type.inspect}"
           req.unsupported_grant_type!
@@ -37,6 +36,15 @@ module OIDCProvider
     end
 
     private
+
+    def build_authorization_with(refresh_token)
+      Authorization.create(
+        client_id: refresh_token.client_id,
+        nonce: oauth_request.nonce,
+        scopes: refresh_token.scopes,
+        account: oidc_current_account
+      )
+    end
 
     def find_valid_client_from(req)
       client = ClientStore.new.find_by(
