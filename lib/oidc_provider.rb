@@ -47,6 +47,15 @@ module OIDCProvider
   mattr_accessor :account_email
   @@account_identifier = :email
 
+  mattr_accessor :account_given_name
+  @@account_identifier = :given_name
+
+  mattr_accessor :account_family_name
+  @@account_identifier = :family_name
+
+  # Include User claims from scopes in the id_token, for applications that don't access the userinfo endpoint.
+  mattr_accessor :include_user_claims_in_id_token
+  @@include_user_claims_in_id_token = false
 
   mattr_accessor :after_sign_out_path
 

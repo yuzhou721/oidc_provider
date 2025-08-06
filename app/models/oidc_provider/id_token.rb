@@ -11,16 +11,33 @@ module OIDCProvider
     delegate :account, to: :authorization
 
     def to_response_object
-      OpenIDConnect::ResponseObject::IdToken.new(
-        iss: OIDCProvider.issuer,
-        sub: account.send(OIDCProvider.account_identifier),
-        aud: authorization.client_id,
-        nonce: nonce,
-        exp: expires_at.to_i,
-        iat: created_at.to_i,
-        auth_time:created_at.to_i,
-        amr: ['pwd']
-      )
+      if OIDCProvider.include_user_claims_in_id_token
+        OpenIDConnect::ResponseObject::IdTokenWithUserInfo.new(
+          iss: OIDCProvider.issuer,
+          sub: account.send(OIDCProvider.account_identifier),
+          aud: authorization.client_id,
+          nonce: nonce,
+          exp: expires_at.to_i,
+          iat: created_at.to_i,
+          auth_time:created_at.to_i,
+          amr: ['pwd'],
+          email: account.send(OIDCProvider.account_email),
+          email_verified: true,
+          given_name: account.send(OIDCProvider.account_given_name),
+          family_name: account.send(OIDCProvider.account_family_name),
+        )
+      else
+        OpenIDConnect::ResponseObject::IdToken.new(
+          iss: OIDCProvider.issuer,
+          sub: account.send(OIDCProvider.account_identifier),
+          aud: authorization.client_id,
+          nonce: nonce,
+          exp: expires_at.to_i,
+          iat: created_at.to_i,
+          auth_time:created_at.to_i,
+          amr: ['pwd']
+        )
+      end
     end
 
     def to_jwt
