@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'openid_connect/response_object/id_token/id_token_with_user_info'
 
 module OIDCProvider
   class IdToken < ApplicationRecord
