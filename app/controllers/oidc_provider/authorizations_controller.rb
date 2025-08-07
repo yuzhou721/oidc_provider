@@ -12,23 +12,16 @@ module OIDCProvider
     before_action :reset_login_if_necessary
     before_action :require_authentication
 
-    def new
-    end
-
     def create
-      if params[:commit] == 'approve'
-        Rails.logger.info "scopes: #{requested_scopes}"
+      Rails.logger.info "scopes: #{requested_scopes}"
 
-        authorization = build_authorization_with(requested_scopes)
+      authorization = build_authorization_with(requested_scopes)
 
-        oauth_response.code = authorization.code if @requested_type==:code or  @requested_type == :hybrid
-        oauth_response.id_token = authorization.id_token.to_jwt if @requested_type==:id_token or  @requested_type == :hybrid
-        oauth_response.redirect_uri = @redirect_uri
-        oauth_response.approve!
-        redirect_to oauth_response.location,allow_other_host: true
-      else
-        oauth_request.access_denied!
-      end
+      oauth_response.code = authorization.code if @requested_type==:code or  @requested_type == :hybrid
+      oauth_response.id_token = authorization.id_token.to_jwt if @requested_type==:id_token or  @requested_type == :hybrid
+      oauth_response.redirect_uri = @redirect_uri
+      oauth_response.approve!
+      redirect_to oauth_response.location,allow_other_host: true
     end
 
     private
@@ -79,10 +72,6 @@ module OIDCProvider
         unauthenticate!
         redirect_to url_for(request.query_parameters.except(:prompt)), allow_other_host: true
       end
-    end
-
-    def require_approval
-      @commit =  params[:commit] || "confirem"
     end
   end
 end
