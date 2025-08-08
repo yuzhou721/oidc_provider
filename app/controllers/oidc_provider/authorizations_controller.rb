@@ -31,7 +31,8 @@ module OIDCProvider
         client_id: @client.identifier,
         nonce: oauth_request.nonce,
         scopes: scopes,
-        account: oidc_current_account
+        account: oidc_current_account,
+        issuer: request.base_url
       )
     end
 
