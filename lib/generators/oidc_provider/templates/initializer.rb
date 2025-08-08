@@ -1,5 +1,4 @@
 OIDCProvider.configure do |config|
-  config.issuer = "https://myoidcprovider.org"
   # config.account_class = "Administrator"
 
   config.add_client do

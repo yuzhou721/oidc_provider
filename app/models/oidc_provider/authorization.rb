@@ -8,6 +8,7 @@ module OIDCProvider
 
     attribute :code, :string, default: -> { SecureRandom.hex 32 }
     attribute :expires_at, :datetime, default: -> { 5.minutes.from_now }
+    attribute :issuer, :string
 
     serialize :scopes, coder: JSON
 

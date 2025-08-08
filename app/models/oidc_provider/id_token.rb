@@ -13,7 +13,7 @@ module OIDCProvider
 
     def to_response_object
       base_claims ={
-        iss: OIDCProvider.issuer,
+        iss: authorization.issuer,
         sub: account.send(OIDCProvider.account_identifier),
         aud: authorization.client_id,
         nonce: nonce,
@@ -46,7 +46,6 @@ module OIDCProvider
     class << self
       def config
         {
-          issuer: OIDCProvider.issuer,
           jwk_set: JSON::JWK::Set.new(public_jwk)
         }
       end
