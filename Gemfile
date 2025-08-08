@@ -15,4 +15,3 @@ gemspec
 # gem 'byebug', group: [:development, :test]
 
 gem "openid_connect"
-gem "rack-cors"
